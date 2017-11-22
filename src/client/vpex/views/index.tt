@@ -1,0 +1,19 @@
+<h2>Пожалуйста, авторизуйтесь</h2>
+<form  action="/go" method=post>
+				<div class="form-group">
+					<input type="text" class="form-control"  name="username" placeholder="Логин">
+					<input type="password" class="form-control" name="password" placeholder="Пароль">
+					<input type="number" class="form-control" name="photos_count" placeholder="Количество фотографий" value=10>
+					<% SET I = 0 %>
+					<% SET MAX_ROWS = 5 %>
+					<select name="rows_count" id="rows_count" class="form-control">
+					  <% WHILE I < MAX_ROWS %>
+                        <% SET I=I+1 %>
+					    <option value="<% I %>" <% IF I==3 %> selected <% END %> > <% I %> </option> 
+					  <% END %>    
+					</select>
+					<input type=radio name='out_type' value='PDF' checked>Вывод в PDF<br>
+					<input type=radio name='out_type' value='HTML'>Вывод в HTML<br>
+				</div>
+				<button type="submit" class="btn btn-default">Вперед</button>
+</form>

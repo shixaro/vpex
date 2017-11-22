@@ -1,0 +1,90 @@
+package vpex::Index;
+use Dancer2;
+use utf8;
+use LWP::UserAgent;
+use DBI;
+use JSON;
+use Digest::MD5  qw(md5_hex);
+use strict;
+use warnings;
+
+
+use vars qw(%var);
+
+
+get '/' => sub {
+	
+  template 'index', { 
+     'VAR' => \%var,     
+  };
+  
+
+}; ## /
+
+post '/go' => sub {
+  
+
+  my $json = JSON->new;
+  my $ua = LWP::UserAgent->new();
+  
+  $var{'ERROR'}=0;	
+  $var{'ERROR'}=4041 if !params->{'username'}; 
+  $var{'ERROR'}=4042 if !params->{'password'}; 
+
+  
+  if ($var{'ERROR'}==0)
+  {
+        
+    $var{'JSON_REQUEST'} = {
+		             'username' => params->{'username'},
+                     'password' => md5_hex(params->{'password'}),
+                     'photos_counts' => params->{'photos_counts'},
+                     'rows_count' => params->{'rows_count'},
+                     'out_type' => params->{'out_type'}                     
+                   };																																																																																											                             																																																																																					             
+    $var{'JSON_REQUEST'}  = to_json($var{'JSON_REQUEST'}, {ascii => 1});  
+    
+    
+    my $auth_url='http://localhost:3000/go';
+  
+    my $auth_response = $ua->post ($auth_url, [ 
+                                      'request' => $var{'JSON_REQUEST'}
+                                      #'username' => params->{'username'},
+                                      #'password' => params->{'password'},
+                                      #'photos_counts' => params->{'photos_counts'},
+                                      #'rows_count' => params->{'rows_count'},
+                                      #'out_type' => params->{'out_type'},
+                                      #id => $var{'FORUM_ID'},
+                                      #format => 'json',
+                                      #c_session => $var{'C_SESSION'},
+                                    ]); 
+                                  
+  if ( $auth_response->is_success() ) 
+  {
+    my $obj = $auth_response->content();
+    debug "We`re get response DATA!!! data: $obj;";
+    
+  } ## if ($auth_response->is_success()
+  else
+  {
+	my $obj = $auth_response->content();
+    debug "DEBUG. no response for auth data...; OBJ: $obj;";
+  }   
+
+    
+    debug "I`m IN. OAUTH_URL: $var{'OAUTH_URL'}";
+  }  
+  template 'go', { 
+     'VAR' => \%var,
+     
+  };
+  
+
+}; ## /
+
+
+
+
+
+
+true;
