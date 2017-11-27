@@ -14,6 +14,10 @@ use vars qw(%var);
 
 
 any '/' => sub {
+  
+
+
+  $var{'OAUTH_CODE'} = params->{'code'};
 
   template 'index', { 
      'VAR' => \%var,     
@@ -22,6 +26,7 @@ any '/' => sub {
 
 }; ## /
 
+
 post '/go' => sub {
   
 
@@ -29,16 +34,20 @@ post '/go' => sub {
   my $ua = LWP::UserAgent->new();
   
   $var{'ERROR'}=0;	
-  $var{'ERROR'}=4041 if !params->{'username'}; 
-  $var{'ERROR'}=4042 if !params->{'password'}; 
-
+  #$var{'ERROR'}=4041 if !params->{'username'}; 
+  #$var{'ERROR'}=4042 if !params->{'password'}; 
+  
+  
+  $var{'OAUTH_CODE'} = params->{'OAUTH_CODE'};
+  debug "GO. oauth_code: $var{'OAUTH_CODE'};";
   
   if ($var{'ERROR'}==0)
   {
         
     $var{'JSON_REQUEST'} = {
-		             'username' => params->{'username'},
-                     'password' => md5_hex(params->{'password'}),
+		             #'username' => params->{'username'},
+                     #'password' => md5_hex(params->{'password'}),
+                     'OAUTH_CODE' => params->{'OAUTH_CODE'},
                      'photos_count' => params->{'photos_count'},
                      'rows_count' => params->{'rows_count'},
                      'out_type' => params->{'out_type'}                     
