@@ -1,7 +1,0 @@
-<% IF VAR.ERROR > 0 %>
-  <center><font color=red><b>Ошибка номер <% VAR.ERROR %>.</b></font></center>
-<% END %>
-
-<% IF VAR.ERROR==0 %>
-  <% VAR.REPLY %>
-<% END %> 

@@ -1,2 +1,0 @@
-#!/bin/bash
-starman --workers=2 --listen :3000 bin/app_starman.pl
